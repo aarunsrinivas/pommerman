@@ -176,3 +176,5 @@ local
 ####################
 a/static/js/build/*
 a/static/css/*
+
+wandb/

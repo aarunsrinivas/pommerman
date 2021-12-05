@@ -1,11 +1,12 @@
 '''An example to show how to set up an pommerman game programmatically'''
 import pommerman
 from pommerman import agents
+import wandb
 
 
 def main():
     '''Simple function to bootstrap a game.
-       
+
        Use this as an example to set up your training env.
     '''
     # Print all possible environments in the Pommerman registry
@@ -23,16 +24,21 @@ def main():
     env = pommerman.make('PommeFFACompetition-v0', agent_list)
 
     # Run the episodes just like OpenAI Gym
-    for i_episode in range(1):
+    for i_episode in range(10):
+        total_reward = 0
         state = env.reset()
         done = False
         while not done:
             env.render()
             actions = env.act(state)
             state, reward, done, info = env.step(actions)
+            total_reward += reward[0]
         print('Episode {} finished'.format(i_episode))
+        wandb.log({'reward': total_reward})
     env.close()
+    wandb.finish()
 
 
 if __name__ == '__main__':
+    wandb.init(project='pommerman', config=dict(reward='sparse'))
     main()
